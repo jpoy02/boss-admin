@@ -4,8 +4,10 @@ import moment from "moment/moment";
 import { useQueueStore } from "stores/queueStore";
 import { onMounted, ref, watch } from "vue";
 import axios from "axios";
+import { useUtils } from "src/composables/useUtils";
 
 const queueStore = useQueueStore();
+const utils = useUtils();
 
 const applications = ref([]);
 const createQueueDialogState = ref(false);
@@ -80,6 +82,13 @@ const columns = [
     field: (row) => row.businessname,
   },
   {
+    name: "state",
+    required: true,
+    label: "App Status",
+    align: "left",
+    field: (row) => row.state,
+  },
+  {
     name: "active_queue",
     required: true,
     label: "Active Queue # (Today)",
@@ -151,6 +160,20 @@ const columns = [
                 <span class="text-weight-bold">{{
                   moment(props.row.dtfiled).format("LL")
                 }}</span>
+              </div>
+            </q-td>
+
+            <q-td key="state" :props="props">
+              <div class="text-weight-regular q-pa-sm">
+                <q-badge
+                  rounded
+                  outline
+                  :color="utils.badgeColor(props.row.state)"
+                  class=""
+                >
+                  <q-icon name="trip_origin" class="q-mr-xs" />
+                  {{ props.row.state }}
+                </q-badge>
               </div>
             </q-td>
 

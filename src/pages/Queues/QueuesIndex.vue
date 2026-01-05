@@ -26,7 +26,7 @@ onMounted(async () => {
         <CreateQueue />
         <QueueRecentApplications />
       </div>
-      <div class="col-6 q-gutter-y-md">
+      <div class="col-5 q-gutter-y-md">
         <QueuesList />
       </div>
     </div>

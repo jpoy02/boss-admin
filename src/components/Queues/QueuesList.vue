@@ -33,6 +33,19 @@ const cancelQueue = async (id, queue_number) => {
   }
 };
 
+const completeQueue = async (id, queue_number) => {
+  try {
+    if (confirm(`Are you sure to complete ${queue_number} ?`)) {
+      const res = await axios.post(
+        process.env.QUEUE_API + `/api/queues/${id}/complete`
+      );
+      if (res.data) alert(res.data.message);
+    }
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
 const initData = async () => {
   try {
     const res = await axios.get(process.env.QUEUE_API + "/api/queues");
@@ -45,6 +58,7 @@ const initData = async () => {
       return new Date(a.created_at) - new Date(b.created_at);
     });
     queuesList.value = sorted;
+    console.log("sorted: ", sorted);
   } catch (error) {
     console.error(error);
   }
@@ -142,7 +156,7 @@ const categoryColor = (type = "") => {
                 {{ row.ownername }}
               </div>
             </div>
-            <div class="col-3">
+            <div class="col">
               <div class="row no-wrap q-gutter-x-sm justify-end">
                 <!-- <q-btn dense label="Edit" color="primary" class="col-grow" /> -->
                 <q-btn
@@ -153,6 +167,15 @@ const categoryColor = (type = "") => {
                   outline
                   style="color: orangered"
                   @click="cancelQueue(row.id, row.queue_number)"
+                />
+                <q-btn
+                  class="q-px-md"
+                  dense
+                  label="Complete"
+                  icon="check"
+                  outline
+                  style="color: green"
+                  @click="completeQueue(row.id, row.queue_number)"
                 />
               </div>
             </div>

@@ -36,7 +36,7 @@ onMounted(async () => {
     </q-card-section>
     <q-card-section class="col row items-center justify-center">
       <div
-        v-for="item in data"
+        v-for="item in data.slice(0, 16)"
         :key="item.id"
         class="text-weight-bold text-h2 q-mx-lg q-py-xs q-px-sm text-grey-9"
       >
