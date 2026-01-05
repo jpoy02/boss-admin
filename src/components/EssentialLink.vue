@@ -1,17 +1,9 @@
 <template>
-  <q-item
-    clickable
-    tag="a"
-    target="_blank"
-    :href="props.link"
-  >
-    <q-item-section
-      v-if="props.icon"
-      avatar
-    >
+  <q-item clickable tag="a" :to="props.link" class="q-my-md">
+    <!-- target="_blank" -->
+    <q-item-section v-if="props.icon" avatar>
       <q-icon :name="props.icon" />
     </q-item-section>
-
     <q-item-section>
       <q-item-label>{{ props.title }}</q-item-label>
       <q-item-label caption>{{ props.caption }}</q-item-label>
@@ -21,28 +13,28 @@
 
 <script setup>
 defineOptions({
-  name: 'EssentialLink'
-})
+  name: "EssentialLink",
+});
 
 const props = defineProps({
   title: {
     type: String,
-    required: true
+    required: true,
   },
 
   caption: {
     type: String,
-    default: ''
+    default: "",
   },
 
   link: {
     type: String,
-    default: '#'
+    default: "#",
   },
 
   icon: {
     type: String,
-    default: ''
-  }
-})
+    default: "",
+  },
+});
 </script>

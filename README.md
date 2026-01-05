@@ -1,5 +1,6 @@
 # BOSS App (boss-admin)
 
+
 BOSS Assessment App
 
 ## Install the dependencies
@@ -39,3 +40,6 @@ quasar build
 
 ### Customize the configuration
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+
+
+ sudo docker compose down --rmi && sudo docker compose up --build -d

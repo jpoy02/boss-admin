@@ -1,0 +1,19 @@
+services:
+  boss-admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: boss-admin-container
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "9000:9000" # Default Quasar dev port
+      # - "8080:8080"   # Alternative port (if needed)
+    volumes:
+      - .:/src
+      - /src/node_modules # Prevents local node_modules from overwriting container's
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    command: /bin/sh -c "npm install && npm run dev" # Or "npm install && npm run dev"
