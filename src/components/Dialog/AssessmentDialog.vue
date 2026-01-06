@@ -124,7 +124,7 @@ const increaseAssessment = (account_title, amount) => {
   );
   // If found, update its amount
   if (item) {
-    item.amount = currFormat(newAmount); // or item.amount = amount if you want to set instead of add
+    item.amount = newAmount.toFixed(2); // or item.amount = amount if you want to set instead of add
   } else {
     console.warn("Account title not found:", account_title);
   }
@@ -185,6 +185,7 @@ const findItemsPerLob = () => {
               <div class="text-overline">Business Tax: {{ lob.lob_name }}</div>
               <div class="text-caption text-grey q-gutter-y-sm">
                 <q-input
+                  @focus="$event.target.select()"
                   v-for="item in lob.items"
                   :key="item.objid"
                   input-class="text-right text-weight-bold"
@@ -210,6 +211,7 @@ const findItemsPerLob = () => {
             <div class="text-overline">BPLO Fees</div>
             <div class="text-caption text-grey q-gutter-y-sm">
               <q-input
+                @focus="$event.target.select()"
                 v-if="role == 'bplo' || role == 'admin'"
                 input-class="text-right text-weight-bold"
                 outlined
@@ -223,6 +225,7 @@ const findItemsPerLob = () => {
                 "
               />
               <q-input
+                @focus="$event.target.select()"
                 v-if="role == 'bplo' || role == 'admin'"
                 outlined
                 dense
@@ -236,6 +239,7 @@ const findItemsPerLob = () => {
                 "
               />
               <q-input
+                @focus="$event.target.select()"
                 v-if="role == 'bplo' || role == 'admin'"
                 outlined
                 dense
@@ -249,6 +253,7 @@ const findItemsPerLob = () => {
                 "
               />
               <q-input
+                @focus="$event.target.select()"
                 v-if="role == 'bplo' || role == 'admin'"
                 outlined
                 dense
@@ -270,6 +275,7 @@ const findItemsPerLob = () => {
             <div class="text-overline">Regulatory Fees</div>
             <div class="text-caption text-grey q-gutter-y-sm">
               <q-input
+                @focus="$event.target.select()"
                 v-if="role == 'mho' || role == 'admin'"
                 outlined
                 dense
@@ -283,6 +289,7 @@ const findItemsPerLob = () => {
                 "
               />
               <q-input
+                @focus="$event.target.select()"
                 v-if="role == 'mho' || role == 'admin'"
                 outlined
                 dense
@@ -296,6 +303,7 @@ const findItemsPerLob = () => {
                 "
               />
               <q-input
+                @focus="$event.target.select()"
                 v-if="role == 'mho' || role == 'admin'"
                 outlined
                 dense
@@ -309,6 +317,7 @@ const findItemsPerLob = () => {
                 "
               />
               <q-input
+                @focus="$event.target.select()"
                 v-if="role == 'mpdo' || role == 'admin'"
                 outlined
                 dense
@@ -322,6 +331,7 @@ const findItemsPerLob = () => {
                 "
               />
               <q-input
+                @focus="$event.target.select()"
                 v-if="role == 'meo' || role == 'admin'"
                 outlined
                 dense
@@ -347,6 +357,7 @@ const findItemsPerLob = () => {
             <div class="text-overline">Other Fees</div>
             <div class="text-caption text-grey q-gutter-y-sm">
               <q-input
+                @focus="$event.target.select()"
                 v-if="role == 'bplo' || role == 'admin'"
                 input-class="text-right text-weight-bold"
                 outlined
@@ -360,6 +371,7 @@ const findItemsPerLob = () => {
                 "
               />
               <q-input
+                @focus="$event.target.select()"
                 v-if="role == 'bplo' || role == 'admin'"
                 outlined
                 dense
@@ -375,6 +387,7 @@ const findItemsPerLob = () => {
                 "
               />
               <q-input
+                @focus="$event.target.select()"
                 v-if="role == 'bplo' || role == 'admin'"
                 outlined
                 dense
@@ -394,7 +407,7 @@ const findItemsPerLob = () => {
         <!-- Previous Year -->
         <q-card-section
           horizontal
-          class="block hidden"
+          class="block"
           v-if="previousReceivableList.length != 0"
         >
           <q-card-section class="q-pt-xs q-col-gutter-sm">

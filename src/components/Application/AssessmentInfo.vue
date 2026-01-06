@@ -4,6 +4,8 @@ import { useAuth } from "src/composables/useAuth";
 import { onMounted, ref, computed } from "vue";
 import axios from "src/axios";
 
+const auth = useAuth();
+
 const props = defineProps({
   assessment: Array,
   state: String,
@@ -101,6 +103,8 @@ const assignToMe = async () => {
     console.log(error);
   }
 };
+
+const rowBGColor = (account_title) => {};
 </script>
 
 <template>
@@ -171,7 +175,7 @@ const assignToMe = async () => {
 
         <q-item-section>
           <q-item-label>
-            <span style="font-size: 24px; font-weight: 600">
+            <span style="font-size: 2rem; font-weight: 600">
               {{ calculateTotalAmount(props.assessment) }}
             </span>
           </q-item-label>
@@ -180,7 +184,7 @@ const assignToMe = async () => {
       </q-item>
     </div>
 
-    <q-item-section class="q-px-md">
+    <q-item-section class="q-px-md q-mt-lg">
       <q-table
         flat
         :rows="sortedAssessment.filter((row) => row.amount !== 0)"
@@ -190,14 +194,25 @@ const assignToMe = async () => {
         hide-header
       >
         <template v-slot:body="props">
-          <q-tr :props="props" class="cursor-pointer">
+          <q-tr
+            :props="props"
+            class="cursor-pointer"
+            style="background-color: #f7f7f7"
+          >
             <q-td key="account_title" :props="props">
               <div class="text-weight-bold">
                 {{ props.row.account_title }}
               </div>
             </q-td>
             <q-td key="amount" :props="props">
-              <div class="text-weight-bold">
+              <div
+                class="text-weight-bold"
+                style="
+                  font-size: 1.3rem;
+                  font-variant-numeric: tabular-nums;
+                  font-family: 'Inter', sans-serif;
+                "
+              >
                 {{ currFormat(props.row.amount) }}
               </div>
             </q-td>
@@ -207,3 +222,9 @@ const assignToMe = async () => {
     </q-item-section>
   </q-card>
 </template>
+
+<style scoped>
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+</style>

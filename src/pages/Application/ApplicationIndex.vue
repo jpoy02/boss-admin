@@ -45,6 +45,7 @@ const initData = async (props) => {
       queue_number: null,
       status: null,
       priority: false,
+      created_at: null,
     }));
 
     await attachActiveQueues();
@@ -52,6 +53,10 @@ const initData = async (props) => {
       // priority first
       if (a.priority !== b.priority) {
         return b.priority - a.priority;
+      }
+      // then by queue_number (ascending)
+      if (a.created_at !== b.created_at) {
+        return a.created_at - b.created_at;
       }
       // then by transaction date
       return new Date(a.dtfiled) - new Date(b.dtfiled);
@@ -88,6 +93,7 @@ const attachActiveQueues = async () => {
           row.queue_number = data.queue_number;
           row.status = data.status;
           row.priority = data.priority;
+          row.created_at = data.created_at;
         }
       } catch (err) {
         console.error(err);
