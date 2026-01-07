@@ -15,7 +15,7 @@ const statusFilter = ref(["INFO", "ASSESSMENT", "PAYMENT", "RELEASE"]);
 
 const pagination = ref({
   page: 1,
-  rowsPerPage: 20,
+  rowsPerPage: 100,
   rowsNumber: 0,
 });
 
@@ -33,7 +33,6 @@ const initData = async (props) => {
         filter: statusFilter.value.join(","),
       },
     });
-    console.log("res: ", res);
 
     pagination.value.page = page;
     pagination.value.rowsPerPage = rowsPerPage;
@@ -50,17 +49,40 @@ const initData = async (props) => {
 
     await attachActiveQueues();
     const sortPriority = [...applist.value].sort((a, b) => {
-      // priority first
-      if (a.priority !== b.priority) {
-        return b.priority - a.priority;
+      // First: separate items with queue_number from those without
+      const aHasQueue = a.queue_number !== null && a.queue_number !== undefined;
+      const bHasQueue = b.queue_number !== null && b.queue_number !== undefined;
+
+      if (aHasQueue !== bHasQueue) {
+        return aHasQueue ? -1 : 1; // items with queue_number go above
       }
-      // then by queue_number (ascending)
-      if (a.created_at !== b.created_at) {
-        return a.created_at - b.created_at;
+
+      // For items WITH queue_number:
+      if (aHasQueue && bHasQueue) {
+        // 1. Sort by priority first
+        if (a.priority !== b.priority) {
+          return b.priority - a.priority; // true (priority) first
+        }
+
+        // 2. Then separate no-show items (no-show goes to bottom within queue items)
+        const aIsNoShow = a.status === "no-show";
+        const bIsNoShow = b.status === "no-show";
+
+        if (aIsNoShow !== bIsNoShow) {
+          return aIsNoShow ? 1 : -1; // no-show items go below
+        }
+
+        // 3. Then by created_at (ascending - earliest first)
+        if (a.created_at !== b.created_at) {
+          return new Date(a.created_at) - new Date(b.created_at);
+        }
       }
-      // then by transaction date
-      return new Date(a.dtfiled) - new Date(b.dtfiled);
+
+      // For items WITHOUT queue_number:
+      // Sort by dtfiled (latest first)
+      return new Date(b.dtfiled) - new Date(a.dtfiled);
     });
+
     applist.value = sortPriority;
   } catch (err) {
     console.error(err);
@@ -295,7 +317,7 @@ const columns = [
                     v-if="props.row.priority"
                     outline
                     align="top"
-                    style="font-size: 10px"
+                    style="font-size: 12px"
                     color="deep-orange-10"
                     label="PRIORITY"
                   />
@@ -304,7 +326,7 @@ const columns = [
                     v-if="props.row.status"
                     outline
                     align="top"
-                    style="font-size: 10px"
+                    style="font-size: 12px"
                     :color="useUtils().queueStatusColor(props.row.status)"
                     :label="props.row.status?.toUpperCase()"
                   />

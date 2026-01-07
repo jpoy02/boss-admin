@@ -1,10 +1,11 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, warn, watch } from "vue";
 import axios from "axios";
 import { useAuth } from "src/composables/useAuth";
 import { useQueueStore } from "src/stores/queueStore";
 import { useUtils } from "src/composables/useUtils";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const props = defineProps({
   business_id: String,
 });
@@ -67,6 +68,17 @@ const callQueueNumber = async () => {
 const revertQueueNumber = async () => {
   await queueStore.setQueueToWaiting(queueInfo.value.id, useAuth().role.value);
 };
+
+const noShowQueueNumber = async () => {
+  if (!confirm(`Set this queue ${queueInfo.value.queue_number} to NO-SHOW?`))
+    return;
+  try {
+    await queueStore.setQueueToNoShow(queueInfo.value.id);
+    router.push("/applications");
+  } catch (error) {
+    console.warn(error);
+  }
+};
 </script>
 
 <template>
@@ -102,10 +114,21 @@ const revertQueueNumber = async () => {
             @click="callQueueNumber()"
           />
           <q-btn
-            v-if="queueInfo.status == 'processing'"
+            v-if="queueInfo.status != 'no-show'"
+            dense=""
+            outline=""
+            color="red"
+            icon="flag"
+            label="NO SHOW"
+            @click="noShowQueueNumber()"
+          />
+          <q-btn
+            v-if="
+              queueInfo.status == 'processing' || queueInfo.status == 'no-show'
+            "
+            outline=""
             dense
-            flat
-            label="End Queue"
+            label="End"
             class="q-px-md"
             @click="revertQueueNumber()"
           />

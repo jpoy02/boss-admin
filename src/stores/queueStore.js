@@ -92,6 +92,15 @@ export const useQueueStore = defineStore("queue", {
       }
     },
 
+    async setQueueToNoShow(id) {
+      try {
+        await axios.post(process.env.QUEUE_API + `/api/queues/${id}/no-show`);
+        this.refreshKey++;
+      } catch (err) {
+        throw err;
+      }
+    },
+
     async getActiveQueues(busid) {
       const res = await axios.get(
         process.env.QUEUE_API + `/api/queues/active`,

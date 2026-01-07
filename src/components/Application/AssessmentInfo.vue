@@ -1,10 +1,14 @@
 <script setup>
 import AssessmentDialog from "../Dialog/AssessmentDialog.vue";
 import { useAuth } from "src/composables/useAuth";
-import { onMounted, ref, computed } from "vue";
+import { ref, computed } from "vue";
 import axios from "src/axios";
+import { useUtils } from "src/composables/useUtils";
+import { useSort } from "src/composables/useSort";
 
 const auth = useAuth();
+const utils = useUtils();
+const sort = useSort();
 
 const props = defineProps({
   assessment: Array,
@@ -16,6 +20,16 @@ const props = defineProps({
 });
 const assessmentDialogState = ref(false);
 const selectedAssessment = ref([]);
+
+const trySort = () => {
+  console.log("props.assessment: ", props.assessment);
+  console.log("Is array?", Array.isArray(props.assessment));
+  console.log("First item:", props.assessment[0]);
+  console.log("First item title:", props.assessment[0]?.account_title);
+
+  const separatedArrays = sort.splitByRole(props.assessment);
+  console.log("separatedArrays: ", separatedArrays);
+};
 
 const baseOrder = [
   "BUSINESS TAX",
@@ -53,7 +67,6 @@ const sortedAssessment = computed(() => {
 });
 
 const openAssessmentDialog = (assessment) => {
-  console.log(props.assessment);
   if (props.assessment.length == 0) {
     alert("Need prior Assessment from BPLO");
     return;
@@ -64,17 +77,7 @@ const openAssessmentDialog = (assessment) => {
 
 const calculateTotalAmount = (data) => {
   const total = data.reduce((total, item) => total + item.amount, 0);
-  return total.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-};
-
-const currFormat = (data) => {
-  return data.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+  return utils.currencyFormat(total);
 };
 
 const disabledState = computed(() => ({
@@ -83,7 +86,7 @@ const disabledState = computed(() => ({
 }));
 
 const canShow = (state) => {
-  const role = useAuth().role.value;
+  const role = auth.role.value;
   return state == "INFO" && ["bplo", "admin"].includes(role);
 };
 
@@ -103,8 +106,6 @@ const assignToMe = async () => {
     console.log(error);
   }
 };
-
-const rowBGColor = (account_title) => {};
 </script>
 
 <template>
@@ -189,7 +190,6 @@ const rowBGColor = (account_title) => {};
         flat
         :rows="sortedAssessment.filter((row) => row.amount !== 0)"
         row-key="name"
-        :rows-per-page-options="[0]"
         hide-bottom
         hide-header
       >
@@ -213,7 +213,7 @@ const rowBGColor = (account_title) => {};
                   font-family: 'Inter', sans-serif;
                 "
               >
-                {{ currFormat(props.row.amount) }}
+                {{ utils.currencyFormat(props.row.amount) }}
               </div>
             </q-td>
           </q-tr>

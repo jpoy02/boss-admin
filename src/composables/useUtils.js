@@ -6,18 +6,27 @@ export function useUtils() {
   const queueStatusColor = (status = "") => {
     switch (status.toLowerCase()) {
       case "waiting":
-        return "grey-6";
+        return "grey-6"; // Neutral - awaiting action
       case "processing":
-        return "blue";
+        return "blue"; // Active/in-progress
       case "done":
-        return "green";
+        return "green"; // Success/completed
       case "cancelled":
-        return "red";
+        return "red"; // User-initiated termination
       case "expired":
-        return "orange";
+        return "orange"; // Time-based warning
+      case "no-show":
+        return "deep-orange"; // More severe than expired, customer fault
       default:
         return "grey";
     }
+  };
+
+  const currencyFormat = (data) => {
+    return data.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   };
 
   const badgeColor = (state) => {
@@ -38,5 +47,12 @@ export function useUtils() {
     return str.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
-  return { test, queueStatusColor, toCapitalized, toSentenceCase, badgeColor };
+  return {
+    test,
+    queueStatusColor,
+    toCapitalized,
+    toSentenceCase,
+    badgeColor,
+    currencyFormat,
+  };
 }
