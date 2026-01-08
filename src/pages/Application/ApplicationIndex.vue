@@ -15,7 +15,7 @@ const statusFilter = ref(["INFO", "ASSESSMENT", "PAYMENT", "RELEASE"]);
 
 const pagination = ref({
   page: 1,
-  rowsPerPage: 100,
+  rowsPerPage: 50,
   rowsNumber: 0,
 });
 
